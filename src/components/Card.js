@@ -7,7 +7,7 @@ import { updateCard } from '../actions/cards'
 // Selectors
 import { cardById } from '../selectors/cards'
 
-export function Card({ cardId }) {
+function Card({ cardId }) {
   const [editorOpen, setEditorOpen] = useState(false)
   const card = useSelector(cardById(cardId))
   const dispatch = useDispatch()
@@ -19,7 +19,7 @@ export function Card({ cardId }) {
   }
 
   useEffect(() => {
-    console.log(`${card.name} is updating`)
+    console.log(`CardId ${cardId} is updating...`)
   })
 
   return (
@@ -33,3 +33,7 @@ export function Card({ cardId }) {
     </li>
   )
 }
+
+const MemoizedCard = React.memo(Card)
+
+export { MemoizedCard as Card }

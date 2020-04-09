@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useSelector, shallowEqual } from 'react-redux'
 
 // Selectors
 import { allCardIds } from '../selectors/cards'
@@ -8,7 +8,11 @@ import { allCardIds } from '../selectors/cards'
 import { Card } from './Card'
 
 export function CardList() {
-  const cardIds = useSelector(allCardIds)
+  const cardIds = useSelector(allCardIds, shallowEqual)
+
+  useEffect(() => {
+    console.log('CardList is updating...')
+  })
 
   return (
     <ul>
