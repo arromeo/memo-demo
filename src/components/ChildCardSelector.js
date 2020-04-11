@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // Actions
-import { addChild } from '../actions/cards'
+import { addChild, subscribe } from '../actions/cards'
 
 // Selectors
 import { allCards } from '../selectors/cards'
@@ -16,6 +16,7 @@ export function ChildCardSelector({ cardId }) {
   const handleSubmit = (event) => {
     event.preventDefault()
     dispatch(addChild(cardId, selectRef.current.value))
+    dispatch(subscribe(selectRef.current.value, cardId))
   }
 
   return (
