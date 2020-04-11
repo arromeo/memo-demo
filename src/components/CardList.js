@@ -23,11 +23,9 @@ export function CardList() {
   return (
     <Fragment>
       <button onClick={handleAddButtonClick}>+</button>
-      <ul>
-        {cardIds.map((cardId) => {
-          return <Card key={cardId} cardId={cardId} />
-        })}
-      </ul>
+      {cardIds.map((cardId) => {
+        return <Card key={cardId} cardId={cardId} />
+      })}
     </Fragment>
   )
 }
