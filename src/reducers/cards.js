@@ -1,30 +1,6 @@
 import { cardActions } from '../actions/cards'
 
-// Start with some mock data
-const initialState = {
-  1: {
-    id: '1',
-    value: 'Card 1',
-    children: []
-  },
-  2: {
-    id: '2',
-    value: 'Card 2',
-    children: ['1']
-  },
-  3: {
-    id: '3',
-    value: 'Card 3',
-    children: ['2']
-  },
-  4: {
-    id: '4',
-    value: 'Card 4',
-    children: ['2', '3']
-  }
-}
-
-export const cardsReducer = (state = initialState, action) => {
+export const cardsReducer = (state = {}, action) => {
   switch (action.type) {
     case cardActions.ADD_CARD:
       return {
@@ -32,7 +8,11 @@ export const cardsReducer = (state = initialState, action) => {
         [action.id]: {
           id: action.id,
           value: action.value,
-          children: []
+          children: [],
+          ui: {
+            childLabels: [],
+            subscribers: []
+          }
         }
       }
     case cardActions.ADD_CHILD:
@@ -51,6 +31,52 @@ export const cardsReducer = (state = initialState, action) => {
           value: action.value
         }
       }
+    case cardActions.SUBSCRIBE:
+      return {
+        ...state,
+        [action.observableId]: {
+          ...state[action.observableId],
+          ui: {
+            ...state[action.observableId].ui,
+            subscribers: state[action.observableId].ui.subscribers.concat(
+              action.subscriberId
+            )
+          }
+        },
+        [action.subscriberId]: {
+          ...state[action.subscriberId],
+          ui: {
+            ...state[action.subscriberId].ui,
+            childLabels: state[action.subscriberId].ui.childLabels.concat({
+              id: action.observableId,
+              label: state[action.observableId].value
+            })
+          }
+        }
+      }
+    case cardActions.UPDATE_CHILD_LABELS:
+      const result = {}
+
+      Object.keys(state).forEach(
+        (cardId) =>
+          (result[cardId] = state[action.parentId].ui.subscribers.includes(
+            cardId
+          )
+            ? {
+                ...state[cardId],
+                ui: {
+                  ...state[cardId].ui,
+                  childLabels: state[cardId].ui.childLabels.map((label) =>
+                    label.id === action.parentId
+                      ? { id: action.parentId, label: action.value }
+                      : label
+                  )
+                }
+              }
+            : state[cardId])
+      )
+
+      return result
     default:
       return state
   }

@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 // Actions
-import { updateCard } from '../actions/cards'
+import { updateChildLabels, updateCard } from '../actions/cards'
 
 // Selectors
-import { cardById, childCardNames } from '../selectors/cards'
+import { cardById } from '../selectors/cards'
 
 // Components
 import { ChildCardSelector } from './ChildCardSelector'
@@ -28,7 +28,6 @@ function Card({ cardId }) {
   const [editorOpen, setEditorOpen] = useState(false)
 
   const card = useSelector(cardById(cardId))
-  const childCards = useSelector(childCardNames(cardId))
 
   const dispatch = useDispatch()
 
@@ -36,6 +35,7 @@ function Card({ cardId }) {
 
   const handleChange = (event) => {
     dispatch(updateCard(cardId, event.target.value))
+    dispatch(updateChildLabels(cardId, event.target.value))
   }
 
   useEffect(() => {
@@ -54,8 +54,8 @@ function Card({ cardId }) {
       </CardHeader>
       {editorOpen && <ChildCardSelector cardId={cardId} />}
       <ul>
-        {childCards.map((child, index) => (
-          <li key={index}>{child}</li>
+        {card.ui.childLabels.map((child, index) => (
+          <li key={index}>{child.label}</li>
         ))}
       </ul>
     </CardContainer>
