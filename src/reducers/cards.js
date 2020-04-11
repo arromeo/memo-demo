@@ -1,25 +1,29 @@
 import { cardActions } from '../actions/cards'
 
-const initialState = {
-  1: {
-    name: 'card 1'
-  },
-  2: {
-    name: 'card 2'
-  },
-  3: {
-    name: 'card 3'
-  }
-}
-
-export const cardsReducer = (state = initialState, action) => {
+export const cardsReducer = (state = {}, action) => {
   switch (action.type) {
+    case cardActions.ADD_CARD:
+      return {
+        ...state,
+        [action.id]: {
+          value: action.value,
+          children: []
+        }
+      }
+    case cardActions.ADD_CHILD:
+      return {
+        ...state,
+        [action.parentId]: {
+          ...state[action.parentId],
+          children: state[action.parentId].children.concat(action.childId)
+        }
+      }
     case cardActions.UPDATE_CARD:
       return {
         ...state,
         [action.id]: {
           ...state[action.id],
-          name: action.value
+          value: action.value
         }
       }
     default:
