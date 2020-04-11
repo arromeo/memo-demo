@@ -35,6 +35,11 @@ function Card({ cardId }) {
       ) : (
         card.value
       )}
+      <ul>
+        {card.children.map((child, index) => (
+          <li key={index}>{child}</li>
+        ))}
+      </ul>
       <button onClick={toggleEditorOpen}>Edit</button>
     </li>
   )
