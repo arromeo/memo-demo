@@ -54,7 +54,7 @@ function Card({ cardId }) {
       </CardHeader>
       {editorOpen && <ChildCardSelector cardId={cardId} />}
       <ul>
-        {card.ui.childLabels.map((child, index) => (
+        {card.childLabels.map((child, index) => (
           <li key={index}>{child.label}</li>
         ))}
       </ul>

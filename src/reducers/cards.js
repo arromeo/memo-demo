@@ -9,10 +9,8 @@ export const cardsReducer = (state = {}, action) => {
           id: action.id,
           value: action.value,
           children: [],
-          ui: {
-            childLabels: [],
-            subscribers: []
-          }
+          childLabels: [],
+          subscribers: []
         }
       }
     case cardActions.ADD_CHILD:
@@ -36,45 +34,35 @@ export const cardsReducer = (state = {}, action) => {
         ...state,
         [action.observableId]: {
           ...state[action.observableId],
-          ui: {
-            ...state[action.observableId].ui,
-            subscribers: state[action.observableId].ui.subscribers.concat(
-              action.subscriberId
-            )
-          }
+          subscribers: state[action.observableId].subscribers.concat(
+            action.subscriberId
+          )
         },
         [action.subscriberId]: {
           ...state[action.subscriberId],
-          ui: {
-            ...state[action.subscriberId].ui,
-            childLabels: state[action.subscriberId].ui.childLabels.concat({
-              id: action.observableId,
-              label: state[action.observableId].value
-            })
-          }
+          childLabels: state[action.subscriberId].childLabels.concat({
+            id: action.observableId,
+            label: state[action.observableId].value
+          })
         }
       }
-    case cardActions.UPDATE_CHILD_LABELS:
-      const result = {}
 
-      Object.keys(state).forEach(
-        (cardId) =>
-          (result[cardId] = state[action.parentId].ui.subscribers.includes(
-            cardId
-          )
-            ? {
-                ...state[cardId],
-                ui: {
-                  ...state[cardId].ui,
-                  childLabels: state[cardId].ui.childLabels.map((label) =>
-                    label.id === action.parentId
-                      ? { id: action.parentId, label: action.value }
-                      : label
-                  )
-                }
-              }
-            : state[cardId])
-      )
+    case cardActions.UPDATE_CHILD_LABELS:
+      let result = { ...state }
+
+      result[action.parentId].subscribers.forEach((subscriberId) => {
+        result = {
+          ...result,
+          [subscriberId]: {
+            ...result[subscriberId],
+            childLabels: result[subscriberId].childLabels.map((label) =>
+              label.id === action.parentId
+                ? { id: action.parentId, label: action.value }
+                : label
+            )
+          }
+        }
+      })
 
       return result
     default:
