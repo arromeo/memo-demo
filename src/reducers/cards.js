@@ -6,6 +6,7 @@ export const cardsReducer = (state = {}, action) => {
       return {
         ...state,
         [action.id]: {
+          id: action.id,
           value: action.value,
           children: []
         }
