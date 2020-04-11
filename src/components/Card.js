@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateCard } from '../actions/cards'
 
 // Selectors
-import { cardById } from '../selectors/cards'
+import { cardById, childCardNames } from '../selectors/cards'
 
 // Components
 import { ChildCardSelector } from './ChildCardSelector'
@@ -13,6 +13,7 @@ import { ChildCardSelector } from './ChildCardSelector'
 function Card({ cardId }) {
   const [editorOpen, setEditorOpen] = useState(false)
   const card = useSelector(cardById(cardId))
+  const childCards = useSelector(childCardNames(cardId))
   const dispatch = useDispatch()
 
   const toggleEditorOpen = () => setEditorOpen(!editorOpen)
@@ -36,7 +37,7 @@ function Card({ cardId }) {
         card.value
       )}
       <ul>
-        {card.children.map((child, index) => (
+        {childCards.map((child, index) => (
           <li key={index}>{child}</li>
         ))}
       </ul>
