@@ -1,14 +1,12 @@
-import { v4 as uuidv4 } from 'uuid'
-
 export const cardActions = {
   ADD_CARD: 'card/add',
   ADD_CHILD: 'card/addChild',
   UPDATE_CARD: 'card/update'
 }
 
-export const addCard = (value) => ({
+export const addCard = (value, id) => ({
   type: cardActions.ADD_CARD,
-  id: uuidv4(),
+  id,
   value
 })
 

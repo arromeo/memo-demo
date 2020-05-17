@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { updateCard } from '../actions/cards'
 
 // Selectors
-import { cardById, childCardNames } from '../selectors/cards'
+import { cardById } from '../selectors/cards'
 
 // Components
 import { ChildCardSelector } from './ChildCardSelector'
@@ -24,11 +24,27 @@ const CardHeader = styled.div`
   justify-content: space-between;
 `
 
-function Card({ cardId }) {
+function Card({ cardId, subjects }) {
   const [editorOpen, setEditorOpen] = useState(false)
 
   const card = useSelector(cardById(cardId))
-  const childCards = useSelector(childCardNames(cardId))
+
+  const [labels, setLabels] = useState({})
+
+  const setLabel = (labelId, newLabel) => {
+    setLabels((prev) => ({
+      ...prev,
+      [labelId]: newLabel
+    }))
+  }
+
+  useEffect(() => {
+    subjects[cardId].next(card.value)
+    card.children.forEach((child) => {
+      subjects[child].subscribe((v) => setLabel(child, v))
+    })
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const dispatch = useDispatch()
 
@@ -36,6 +52,11 @@ function Card({ cardId }) {
 
   const handleChange = (event) => {
     dispatch(updateCard(cardId, event.target.value))
+    subjects[cardId].next(event.target.value)
+  }
+
+  const onAddChild = (childId) => {
+    subjects[childId].subscribe((v) => setLabel(childId, v))
   }
 
   useEffect(() => {
@@ -52,10 +73,12 @@ function Card({ cardId }) {
         )}
         <button onClick={toggleEditorOpen}>Edit</button>
       </CardHeader>
-      {editorOpen && <ChildCardSelector cardId={cardId} />}
+      {editorOpen && (
+        <ChildCardSelector cardId={cardId} onAddChild={onAddChild} />
+      )}
       <ul>
-        {childCards.map((child, index) => (
-          <li key={index}>{child}</li>
+        {card.children.map((child, index) => (
+          <li key={index}>{labels[child]}</li>
         ))}
       </ul>
     </CardContainer>

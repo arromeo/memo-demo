@@ -8,16 +8,19 @@ import rootReducer from './reducers'
 // Components
 import { CardList } from './components/CardList'
 
+// Contexts
+import { subscriptions } from './providers/subscriptions'
+
 const store = createStore(rootReducer)
 
 function App() {
-  return (
-    <Provider store={store}>
-      <div className="App">
-        <CardList />
-      </div>
-    </Provider>
-  )
+	return (
+		<Provider store={store} subscriptions={subscriptions}>
+			<div className="App">
+				<CardList />
+			</div>
+		</Provider>
+	)
 }
 
 export default App
