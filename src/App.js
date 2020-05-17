@@ -11,13 +11,13 @@ import { CardList } from './components/CardList'
 const store = createStore(rootReducer)
 
 function App() {
-	return (
-		<Provider store={store}>
-			<div className="App">
-				<CardList />
-			</div>
-		</Provider>
-	)
+  return (
+    <Provider store={store}>
+      <div className="App">
+        <CardList />
+      </div>
+    </Provider>
+  )
 }
 
 export default App
