@@ -7,7 +7,7 @@ import { addChild } from '../actions/cards'
 // Selectors
 import { allCards } from '../selectors/cards'
 
-export function ChildCardSelector({ cardId }) {
+export function ChildCardSelector({ cardId, onAddChild }) {
   const cards = useSelector(allCards)
   const dispatch = useDispatch()
 
@@ -16,6 +16,7 @@ export function ChildCardSelector({ cardId }) {
   const handleSubmit = (event) => {
     event.preventDefault()
     dispatch(addChild(cardId, selectRef.current.value))
+    onAddChild(selectRef.current.value)
   }
 
   return (
